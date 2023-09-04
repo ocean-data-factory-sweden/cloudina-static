@@ -1,72 +1,68 @@
 ---
 layout: page
-title: simple site
-tagline: Easy websites with GitHub Pages
-description: Minimal tutorial on making a simple website with GitHub Pages
+title: Cloudina
+tagline: powered by Combine / SNIC Cloud
+description: Blueprint for subsea image analysis infrastructure
 ---
 
-[Github Pages](https://pages.github.com) provide a simple way to make a
-website using
-[Markdown](https://daringfireball.net/projects/markdown/) and
-[git](https://git-scm.com).
+# ODF Infrastructure Repository
 
-For me, the painful aspects of making a website are
+This repository is meant to host the configuration files needed for an
+Infrastructure-as-Code deployment to a cloud provider using
+[terraform](https://www.terraform.io/intro).
+The cloud currently targeted is the SNIC Science Cloud (SSC), using the
+[OpenStack Terraform
+provider](https://registry.terraform.io/providers/terraform-provider-openstack/openstack/latest).
 
-- Working with html and css
-- Finding a hosting site
-- Transferring stuff to the hosting site
 
-With [GitHub Pages](https://pages.github.com), you just write things in
-[Markdown](https://daringfireball.net/projects/markdown/),
-[GitHub](https://github.com) hosts the site for you, and you just push
-material to your GitHub repository with `git add`, `git commit`, and
-`git push`.
+# First Steps
 
-If you love [git](https://git-scm.com/) and
-[GitHub](https://github.com), you'll love
-[GitHub Pages](https://pages.github.com), too.
+The repository uses [Github Actions](https://docs.github.com/en/actions) for
+DevOps, powered by a single self-hosted runner. For bootstrapping, the runner
+is deployed on the same SSC infrastructure from a local machine. Care should be
+taken when handling the resulting [Terraform state
+file](https://www.terraform.io/language/state) then, but since the process is
+ideally only performed once, that additional effort should be minimal. The
+necessary steps, using a [Variable Definitions
+File](https://www.terraform.io/language/values/variables#variable-definitions-tfvars-files)
+(called `snic.tfvars` in the example) for sensitive data such as login
+information and the Github PAT, is
 
-The sites use [Jekyll](https://jekyllrb.com/), a
-[ruby](https://www.ruby-lang.org/en/) [gem](https://rubygems.org/), to
-convert Markdown files to html, and this part is done
-automatically when you push the materials to the `gh-pages` branch
-of a GitHub repository.
+```bash
+terraform -chdir=infra-runner init -input=false
+terraform -chdir=infra-runner validate
+terraform -chdir=infra-runner plan \
+    -input=false \
+    -out infra-runner.tfplan \
+    -var-file="snic.tfvars"
+terraform -chdir=infra-runner apply \
+    -input=false \
+    -var-file="snic.tfvars" \
+    infra-runner.tfplan
+```
 
-The [GitHub](https://pages.github.com) and
-[Jekyll](https://jekyllrb.com) documentation is great, but I thought it
-would be useful to have a minimal tutorial, for those who just want to
-get going immediately with a simple site. To some readers, what GitHub
-has might be simpler and more direct.  But if you just want to create
-a site like the one you're looking at now, read on.
+# High-level overview
 
-Start by reading the [Overview page](pages/overview.html), which
-explains the basic structure of these sites. Then read
-[how to make an independent website](pages/independent_site.html). Then
-read any of the other things, such as
-[how to test your site locally](pages/local_test.html).
+![Infrastructure overview](./assets/img/cloudina_infrastructure_overview.png)
 
-- [Overview](pages/overview.html)
-- [Making an independent website](pages/independent_site.html)
-- [Making a personal site](pages/user_site.html)
-- [Making a site for a project](pages/project_site.html)
-- [Making a jekyll-free site](pages/nojekyll.html)
-- [Testing your site locally](pages/local_test.html)
-- [Resources](pages/resources.html)
 
-If anything here is confusing (or _wrong_!), or if I've missed
-important details, please
-[submit an issue](https://github.com/kbroman/simple_site/issues), or (even
-better) fork [the GitHub repository for this website](https://github.com/kbroman/simple_site),
-make modifications, and submit a pull request.
+# OpenStack Examples
 
----
+A few helpful code snippets when dealing with the SNIC/NAISS OpenStack infrastructure.
 
-The source for this minimal tutorial is [on github](https://github.com/kbroman/simple_site).
+## Simple CLI Interaction
 
-Also see my [tutorials](https://kbroman.org/tutorials) on
-[git/github](https://kbroman.org/github_tutorial),
-[GNU make](https://kbroman.org/minimal_make),
-[knitr](https://kbroman.org/knitr_knutshell),
-[R packages](https://kbroman.org/pkg_primer),
-[data organization](https://kbroman.org/dataorg),
-and [reproducible research](https://kbroman.org/steps2rr).
+In the main OpenStack console (e.g. in the [QA environment](https://east-1.cloud.snic.se))
+
+1. Click on "API Access"
+1. Click on "Download OpenStack RC File"
+1. Select "OpenStack clouds.yaml File"
+1. Place the downloaded `clouds.yaml` file into the `~/.config/openstack/` folder
+
+In a suitable Python environment, the official `python_openstackclient`
+provides the CLI interface through the `openstack` tool. Provided the
+`clouds.yaml` file was correctly placed as above, the tool can then be used
+
+```bash
+openstack --os-cloud=openstack --os-password ${OS_PASSWORD} network list
+```
