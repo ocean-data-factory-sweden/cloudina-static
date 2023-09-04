@@ -65,7 +65,7 @@ JB :
   # These paths are to the main pages Jekyll-Bootstrap ships with.
   # Some JB helpers refer to these paths; change them here if needed.
   #
-  archive_path: index.md
+  archive_path: nil
   categories_path : nil
   tags_path : nil
   atom_path : nil
@@ -103,3 +103,7 @@ JB :
   # and include your custom code. Your custom file must be defined at:
   #   ./_includes/custom/[HELPER]
   # where [HELPER] is the name of the helper you are overriding.
+
+  # Test header_pages
+  header_pages:
+    - index.md
