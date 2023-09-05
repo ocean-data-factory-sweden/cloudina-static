@@ -38,6 +38,14 @@ jobs:
           mv _site/* dist/
         working-directory: .
 
+      - name: Tag the Release
+        run: git tag v1.0.0  # Replace with the desired tag name
+        continue-on-error: true  # Allow this step to continue even if the tag already exists
+
+      - name: Push Tag to GitHub
+        run: git push origin v1.0.0  # Replace with the same tag name as above
+        if: success()
+
       - name: Publish Package
         uses: softprops/action-gh-release@v1
         with:
