@@ -38,17 +38,20 @@ jobs:
           mv _site/* dist/
         working-directory: .
 
-      - name: Tag the Release
-        run: git tag v1.0.0  # Replace with the desired tag name
-        continue-on-error: true  # Allow this step to continue even if the tag already exists
+      - name: Zip the Package
+        run: zip -r site-package.zip dist
 
-      - name: Push Tag to GitHub
-        run: git push origin v1.0.0  # Replace with the same tag name as above
-        if: success()
-
-      - name: Publish Package
+      - name: Create Release
+        id: create_release
         uses: softprops/action-gh-release@v1
         with:
-          files: dist/*
+          files: site-package.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get Release URL
+        id: release_url
+        run: echo "::set-output name=url::$(curl -s https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/latest | jq -r .html_url)"
+
+      - name: Display Release URL
+        run: echo "Release URL: ${{ steps.release_url.outputs.url }}"
