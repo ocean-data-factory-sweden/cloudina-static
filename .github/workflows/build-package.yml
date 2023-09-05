@@ -38,19 +38,24 @@ jobs:
           mv _site/* dist/
         working-directory: .
 
-      - name: Zip the Package
-        run: zip -r site-package.zip dist
-
-      - name: Create Release
-        id: create_release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: site-package.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Get Release URL
-        id: release_url
+      - name: Publish Package
         run: |
-          echo "::set-output name=url::$(curl -s https://api.github.com/repos/${GITHUB_REPOSITORY}/releases/latest | jq -r .html_url)"
-        shell: bash
+          echo "Publishing Jekyll site as a GitHub Package..."
+          echo "Creating package directory..."
+          mkdir -p package
+          mv dist/* package/
+          echo "Publishing package..."
+          echo "NPM_TOKEN: ${{ secrets.GH_TOKEN }}"
+          echo "PACKAGE_DIR: ${{ github.workspace }}/package"
+          curl -X PUT -H "Authorization: token ${{ secrets.GH_TOKEN }}" -H "Accept: application/vnd.github.v3+json" "https://api.github.com/repos/${GITHUB_REPOSITORY}/contents/package?ref=${GITHUB_REF}" --data-binary @- << EOF
+          {
+            "message": "Publish Jekyll site as GitHub Package",
+            "committer": {
+              "name": "${{ github.actor }}",
+              "email": "${{ github.actor }}@users.noreply.github.com"
+            },
+            "content": "$(base64 -w0 ${github.workspace}/package/*)"
+          }
+          EOF
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
