@@ -3,7 +3,7 @@ name: Publish Jekyll Site as GitHub Package
 on:
   push:
     branches:
-      - gh-pages
+      - gh-pages  # Adjust this to your main branch name
 
 jobs:
   build:
@@ -13,10 +13,24 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Build Jekyll Site
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7  # Adjust the Ruby version as needed
+
+      - name: Install Bundler
+        run: gem install bundler
+        env:
+          GEM_HOME: ${{ github.workspace }}/.gems
+          PATH: ${{ github.workspace }}/.gems/bin:$PATH
+
+      - name: Install Dependencies
         run: |
+          bundle config set path '.gems'
           bundle install
-          bundle exec jekyll build
+
+      - name: Build Jekyll Site
+        run: bundle exec jekyll build
 
       - name: Create Package
         run: |
@@ -30,4 +44,3 @@ jobs:
           files: dist/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
