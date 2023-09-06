@@ -4,7 +4,6 @@ title: Cloudina
 tagline: End-to-end subsea image analysis system
 description: Blueprint for subsea image analysis infrastructure
 ---
-![Cloudina](https://raw.githubusercontent.com/ocean-data-factory-sweden/kso-infra/feature/add-logo/docs/logo.png?token=GHSAT0AAAAAACHHEYG2DGHK5PVMVL7RQTZMZHYYRYQ)
 
 This repository is meant to host the configuration files needed for an
 Infrastructure-as-Code deployment to a cloud provider using
