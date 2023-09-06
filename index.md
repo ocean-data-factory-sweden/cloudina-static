@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Cloudina
-tagline: End-to-end subsea image analysis system
+tagline: End-to-end system for subsea image analysis at scale
 description: Blueprint for subsea image analysis infrastructure
 ---
 
