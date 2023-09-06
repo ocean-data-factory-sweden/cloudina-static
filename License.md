@@ -1,7 +1,6 @@
-To the extent possible under law,
-[Karl Broman](https://github.com/kbroman)
-has waived all copyright and related or neighboring rights to
-&ldquo;[simple site](https://github.com/kbroman/simple_site)&rdquo;.
-This work is published from the United States.
+Powered by Combine
 <br/>
-[![CC0](https://i.creativecommons.org/p/zero/1.0/88x31.png)](https://creativecommons.org/publicdomain/zero/1.0/)
+Enabled by:
+[![ODF Sweden](https://avatars.githubusercontent.com/u/54248548?s=200&v=4)](https://oceandatafactory.se/)
+[![NAISS](https://www.naiss.se/img/logo2.svg)](https://naiss.se)
+[![KSO](https://panoptes-uploads.zooniverse.org/project_avatar/86c23ca7-bbaa-4e84-8d8a-876819551431.png)](https://www.zooniverse.org/projects/victorav/the-koster-seafloor-observatory)

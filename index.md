@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Cloudina
-tagline: powered by Combine / SNIC Cloud
+tagline: End-to-end subsea image analysis system
 description: Blueprint for subsea image analysis infrastructure
 ---
 
